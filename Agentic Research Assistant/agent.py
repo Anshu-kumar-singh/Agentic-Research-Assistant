@@ -13,7 +13,8 @@ from langchain_core.messages import SystemMessage, HumanMessage
 from langchain_tavily import TavilySearch
 from langgraph.graph import StateGraph, START, END
 from langgraph.checkpoint.memory import MemorySaver  # CHANGED: moved here from Cell 9 (cleaner to import at top)
-from langgraph.types import interrupt                 # CHANGED: moved here from inside human_approval_node (cleaner to import at top)
+from langgraph.types import interrupt, Command         # CHANGED: moved here from inside human_approval_node (cleaner to import at top)
+                                                        # ADDED: Command — needed to correctly resume a paused (interrupted) graph
 
 load_dotenv()
 
@@ -314,8 +315,12 @@ def research(query: str):
         human_input = input("Type 'ok' to approve, or give feedback: ") # Get the user's response
 
         # Resume graph with human input
+        # FIX 2: agent.invoke({"resume": human_input}, ...) does NOT resume an interrupt —
+        # LangGraph has no special handling for a "resume" key, so that call just restarts
+        # the graph from START with a bogus extra state key, and human_input is never
+        # delivered to the paused interrupt() call. Command(resume=...) is the real resume API.
         agent.invoke(
-            {"resume": human_input},
+            Command(resume=human_input),
             config=thread,
         )
 
