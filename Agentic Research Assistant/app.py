@@ -1,5 +1,6 @@
 import streamlit as st
 from agent import agent, new_thread
+from langgraph.types import Command  # ADDED: needed to correctly resume a paused (interrupted) graph
 
 st.set_page_config(page_title="Research Agent", page_icon="🔬", layout="centered")
 
@@ -83,15 +84,22 @@ if st.session_state.phase == "approval":
 
     if st.button("Submit"):
         if feedback.strip():
-            agent.invoke({"resume": feedback}, config=st.session_state.thread)
+            # FIX 2: agent.invoke({"resume": feedback}, ...) does NOT resume an interrupt —
+            # LangGraph has no special handling for a "resume" key, so that call just restarts
+            # the graph from START with a bogus extra state key, and feedback is never
+            # delivered to the paused interrupt() call. Command(resume=...) is the real resume API.
+            agent.invoke(Command(resume=feedback), config=st.session_state.thread)
 
             updated = agent.get_state(st.session_state.thread).values
 
             if updated.get("human_approved"):
                 st.session_state.phase = "done"
             else:
-                st.session_state.phase = "running"
-
+                # FIX 3: was "running" — that re-enters Section 3, which calls agent.invoke()
+                # with a brand-new blank state dict, wiping out the graph's resumed progress
+                # (including the new answer just generated from your feedback). Going back to
+                # "approval" instead shows that new answer so the loop can actually continue.
+                st.session_state.phase = "approval"
             st.rerun()
 
 # ── SECTION 5: FINAL ANSWER ──
