@@ -2,6 +2,8 @@
 
 An advanced **Human-in-the-Loop AI Research Agent** built with **LangGraph**, **Groq**, **Tavily Search**, and **Streamlit**.
 
+🚀 **Live Demo:** https://anhu321-agentic-research-assistant.hf.space
+
 The system performs autonomous research by:
 
 1. Rewriting user questions into optimized search queries.
@@ -12,6 +14,16 @@ The system performs autonomous research by:
 6. Iteratively improving responses using human feedback.
 
 This creates a research workflow that combines **AI autonomy** with **human oversight**, making outputs more reliable and trustworthy.
+
+---
+
+# 🚀 Live Demo
+
+🌐 **Try the application here:**
+
+**https://anhu321-agentic-research-assistant.hf.space**
+
+No installation required—simply open the link and start using the AI-powered research assistant.
 
 ---
 
@@ -101,17 +113,19 @@ The feedback is injected into the next research cycle.
 
 Rejected answers trigger:
 
+```text
 Human Feedback
-↓
+        ↓
 Query Rewrite
-↓
+        ↓
 Web Search
-↓
+        ↓
 Answer Generation
-↓
+        ↓
 Critic Review
-↓
+        ↓
 Human Review
+```
 
 This continues until the answer is approved.
 
@@ -266,7 +280,6 @@ Create a `.env` file:
 
 ```env
 GROQ_API_KEY=your_groq_api_key
-
 TAVILY_API_KEY=your_tavily_api_key
 ```
 
@@ -274,11 +287,21 @@ TAVILY_API_KEY=your_tavily_api_key
 
 ## ▶️ Run Application
 
+### Option 1: Use the Live Demo
+
+Open your browser and visit:
+
+**https://anhu321-agentic-research-assistant.hf.space**
+
+---
+
+### Option 2: Run Locally
+
 ```bash
 streamlit run app.py
 ```
 
-Application opens at:
+The application will be available at:
 
 ```text
 http://localhost:8501
@@ -298,7 +321,7 @@ What are the latest developments in quantum computing?
 
 ### Step 2
 
-Agent rewrites query.
+Agent rewrites the query.
 
 ### Step 3
 
@@ -306,15 +329,15 @@ Agent performs web research.
 
 ### Step 4
 
-LLM generates report.
+LLM generates a research report.
 
 ### Step 5
 
-Critic validates answer.
+Critic validates the answer quality.
 
 ### Step 6
 
-Human reviews output.
+Human reviews the output.
 
 ### Step 7
 
@@ -324,11 +347,11 @@ If rejected:
 Include recent breakthroughs from IBM and Google.
 ```
 
-Agent performs another research cycle.
+The agent performs another research cycle.
 
 ### Step 8
 
-Human approves final answer.
+Human approves the final answer.
 
 ---
 
